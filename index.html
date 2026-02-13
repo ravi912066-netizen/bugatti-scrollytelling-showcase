@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BUGATTI CHIRON — Beyond Limits</title>
+  <meta name="description" content="Discover the Bugatti Chiron. A masterpiece of speed, luxury, and engineering excellence. Starting at $3.2M.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN SYSTEM — CSS Variables & Reset
+    ═══════════════════════════════════════════════ */
+    :root {
+      --black: #000000;
+      --bg-deep: #050508;
+      --bg-card: rgba(10, 10, 18, 0.75);
+      --blue: #00d4ff;
+      --blue-glow: rgba(0, 212, 255, 0.35);
+      --blue-dim: rgba(0, 212, 255, 0.12);
+      --silver: #c0c0c0;
+      --silver-light: #e0e0e0;
+      --white: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 212, 255, 0.3);
+      --font-heading: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --nav-height: 72px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto; /* JS controls scroll feel */
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Film grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 128px 128px;
+    }
+
+    ::selection {
+      background: var(--blue);
+      color: var(--black);
+    }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR — Glassmorphism
+    ═══════════════════════════════════════════════ */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(24px, 4vw, 64px);
+      background: rgba(5, 5, 8, 0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(5, 5, 8, 0.85);
+      border-bottom-color: var(--border-hover);
+    }
+
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-size: clamp(14px, 1.6vw, 20px);
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      position: relative;
+    }
+
+    .nav-logo span {
+      color: var(--blue);
+    }
+
+    .nav-cta {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: transparent;
+      border: 1px solid var(--blue);
+      padding: 10px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s var(--ease-out);
+      z-index: -1;
+    }
+
+    .nav-cta:hover {
+      color: var(--black);
+      box-shadow: 0 0 30px var(--blue-glow);
+    }
+
+    .nav-cta:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCROLL CONTAINER — Canvas + HUD
+    ═══════════════════════════════════════════════ */
+    .scroll-container {
+      position: relative;
+      height: 500vh;
+    }
+
+    .sticky-wrapper {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--black);
+    }
+
+    #carCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ═══════════════════════════════════════════════
+       HUD OVERLAY
+    ═══════════════════════════════════════════════ */
+    .hud-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Corner brackets */
+    .hud-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: rgba(0, 212, 255, 0.25);
+      border-style: solid;
+      border-width: 0;
+      transition: border-color 0.6s ease;
+    }
+    .hud-corner.tl { top: 32px; left: 32px; border-top-width: 1px; border-left-width: 1px; }
+    .hud-corner.tr { top: 32px; right: 32px; border-top-width: 1px; border-right-width: 1px; }
+    .hud-corner.bl { bottom: 32px; left: 32px; border-bottom-width: 1px; border-left-width: 1px; }
+    .hud-corner.br { bottom: 32px; right: 32px; border-bottom-width: 1px; border-right-width: 1px; }
+
+    /* Scroll progress bar */
+    .hud-progress {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 1px;
+    }
+
+    .hud-progress-fill {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0%;
+      background: var(--blue);
+      border-radius: 1px;
+      box-shadow: 0 0 8px var(--blue-glow);
+      transition: height 0.1s linear;
+    }
+
+    .hud-progress-label {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-heading);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    /* HUD Content Phases */
+    .hud-phase {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s var(--ease-out);
+      transform: translateY(20px);
+    }
+
+    .hud-phase.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Phase 1: Hero */
+    .hud-hero {
+      bottom: clamp(60px, 12vh, 140px);
+      left: clamp(32px, 5vw, 80px);
+    }
+
+    .hud-hero .hud-tag {
+      font-family: var(--font-heading);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hud-hero .hud-tag::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .hud-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(36px, 6vw, 80px);
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .hud-hero .hud-price {
+      font-family: var(--font-body);
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 300;
+      letter-spacing: 3px;
+      color: var(--silver);
+      margin-bottom: 32px;
+    }
+
+    .hud-hero .hud-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--blue);
+      text-decoration: none;
+      pointer-events: auto;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 12px 0;
+      position: relative;
+    }
+
+    .hud-hero .hud-cta::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--blue);
+      transition: width 0.4s var(--ease-out);
+    }
+
+    .hud-hero .hud-cta:hover::after {
+      width: 64px;
+    }
+
+    /* Phase 2: Design */
+    .hud-design {
+      top: 50%;
+      right: clamp(60px, 8vw, 120px);
+      transform: translateY(-50%) translateY(20px);
+      text-align: right;
+      max-width: 420px;
+    }
+
+    .hud-design.active {
+      transform: translateY(-50%) translateY(0);
+    }
+
+    .hud-design .hud-label {
+      font-family: var(--font-heading);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      color: var(--blue);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .hud-design .hud-label::after {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .hud-design h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hud-design p {
+      font-family: var(--font-body);
+      font-size: clamp(15px, 1.5vw, 18px);
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--silver);
+      letter-spacing: 0.5px;
+    }
+
+    /* Phase 3: Engine */
+    .hud-engine {
+      bottom: clamp(60px, 10vh, 120px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      text-align: center;
+      width: max(320px, 60vw);
+      max-width: 800px;
+    }
+
+    .hud-engine.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hud-engine .hud-label {
+      font-family: var(--font-heading);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      color: var(--blue);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hud-engine .hud-label::before,
+    .hud-engine .hud-label::after {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .hud-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(20px, 4vw, 60px);
+    }
+
+    .hud-stat-value {
+      font-family: var(--font-heading);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .hud-stat-value .unit {
+      font-size: 0.4em;
+      font-weight: 500;
+      color: var(--blue);
+      margin-left: 4px;
+    }
+
+    .hud-stat-label {
+      font-family: var(--font-heading);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Scanline accent */
+    .hud-scanline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue-dim), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .hud-scanline.top { top: 25%; }
+    .hud-scanline.bottom { bottom: 25%; }
+    .hud-scanline.visible { opacity: 1; }
+
+    /* ═══════════════════════════════════════════════
+       POST-SCROLL SECTIONS
+    ═══════════════════════════════════════════════ */
+    .section {
+      padding: clamp(80px, 12vh, 160px) clamp(24px, 5vw, 120px);
+      position: relative;
+    }
+
+    .section-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    }
+
+    .section-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-label {
+      font-family: var(--font-heading);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--blue);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+
+    /* Specs Grid */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .spec-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s ease, transform 0.3s var(--ease-out), box-shadow 0.4s ease;
+    }
+
+    .spec-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .spec-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .spec-card:hover::before {
+      opacity: 1;
+    }
+
+    .spec-card-icon {
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .spec-card-title {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .spec-card-value {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .spec-card-value .highlight {
+      color: var(--blue);
+    }
+
+    .spec-card-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* Divider */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+      margin: 0;
+      border: none;
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--blue);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+      border-color: var(--blue);
+      box-shadow: 0 0 20px var(--blue-glow);
+    }
+
+    .feature-title {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--silver);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    .footer {
+      padding: 60px clamp(24px, 5vw, 120px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .footer-logo span {
+      color: var(--blue);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: var(--font-heading);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--blue);
+    }
+
+    .footer-copy {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      width: 100%;
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ═══════════════════════════════════════════════
+       MAGNETIC BUTTON WRAPPER
+    ═══════════════════════════════════════════════ */
+    .magnetic-wrap {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LOADING SCREEN
+    ═══════════════════════════════════════════════ */
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--bg-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-logo {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 40px;
+    }
+
+    .loader-logo span {
+      color: var(--blue);
+    }
+
+    .loader-bar-track {
+      width: 200px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loader-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--blue);
+      border-radius: 1px;
+      box-shadow: 0 0 10px var(--blue-glow);
+      transition: width 0.15s linear;
+    }
+
+    .loader-percent {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE TWEAKS
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .hud-design {
+        right: 24px;
+        max-width: 260px;
+      }
+      .hud-engine .hud-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .hud-corner { width: 24px; height: 24px; }
+      .hud-corner.tl { top: 20px; left: 20px; }
+      .hud-corner.tr { top: 20px; right: 20px; }
+      .hud-corner.bl { bottom: 20px; left: 20px; }
+      .hud-corner.br { bottom: 20px; right: 20px; }
+      .hud-progress { right: 24px; height: 120px; }
+      .footer { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════ LOADER ════════════════ -->
+  <div class="loader" id="loader">
+    <div class="loader-logo">BUGAT<span>T</span>I</div>
+    <div class="loader-bar-track">
+      <div class="loader-bar" id="loaderBar"></div>
+    </div>
+    <div class="loader-percent" id="loaderPercent">0%</div>
+  </div>
+
+  <!-- ════════════════ NAVBAR ════════════════ -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="nav-logo">BUGAT<span>T</span>I</a>
+    <div class="magnetic-wrap" id="navCtaWrap">
+      <a href="#inquire" class="nav-cta">INQUIRE NOW</a>
+    </div>
+  </nav>
+
+  <!-- ════════════════ SCROLL SECTION ════════════════ -->
+  <section class="scroll-container" id="scrollContainer">
+    <div class="sticky-wrapper">
+      <canvas id="carCanvas"></canvas>
+
+      <div class="hud-overlay" id="hudOverlay">
+        <!-- Corner brackets -->
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+
+        <!-- Scanlines -->
+        <div class="hud-scanline top" id="scanTop"></div>
+        <div class="hud-scanline bottom" id="scanBottom"></div>
+
+        <!-- Scroll progress bar -->
+        <div class="hud-progress">
+          <div class="hud-progress-fill" id="progressFill"></div>
+          <span class="hud-progress-label">SCROLL</span>
+        </div>
+
+        <!-- Phase 1: Hero -->
+        <div class="hud-phase hud-hero active" id="phaseHero">
+          <div class="hud-tag">HYPERCAR</div>
+          <h1>BUGATTI<br>CHIRON</h1>
+          <div class="hud-price">Starting at $3.2M</div>
+          <button class="hud-cta" type="button">INQUIRE NOW</button>
+        </div>
+
+        <!-- Phase 2: Design -->
+        <div class="hud-phase hud-design" id="phaseDesign">
+          <div class="hud-label">02 / 03</div>
+          <h2>DESIGN</h2>
+          <p>Every curve is sculpted for aerodynamic perfection. Carbon fiber monocoque construction meets hand-crafted luxury — where engineering meets art at 420&nbsp;km/h.</p>
+        </div>
+
+        <!-- Phase 3: Engine -->
+        <div class="hud-phase hud-engine" id="phaseEngine">
+          <div class="hud-label">PERFORMANCE</div>
+          <div class="hud-stats">
+            <div class="hud-stat">
+              <div class="hud-stat-value">W16</div>
+              <div class="hud-stat-label">ENGINE</div>
+            </div>
+            <div class="hud-stat">
+              <div class="hud-stat-value">1500<span class="unit">HP</span></div>
+              <div class="hud-stat-label">POWER</div>
+            </div>
+            <div class="hud-stat">
+              <div class="hud-stat-value">420<span class="unit">KM/H</span></div>
+              <div class="hud-stat-label">TOP SPEED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ SPECS SECTION ════════════════ -->
+  <section class="section" id="specsSection">
+    <div class="section-reveal">
+      <div class="section-label">SPECIFICATIONS</div>
+      <h2 class="section-title">Technical Mastery</h2>
+      <div class="specs-grid">
+        <div class="spec-card">
+          <span class="spec-card-icon">⚡</span>
+          <div class="spec-card-title">ENGINE</div>
+          <div class="spec-card-value">8.0L <span class="highlight">W16</span></div>
+          <div class="spec-card-desc">Quad-turbocharged masterpiece</div>
+        </div>
+        <div class="spec-card">
+          <span class="spec-card-icon">🔥</span>
+          <div class="spec-card-title">POWER</div>
+          <div class="spec-card-value">1,500 <span class="highlight">HP</span></div>
+          <div class="spec-card-desc">1,600 Nm peak torque</div>
+        </div>
+        <div class="spec-card">
+          <span class="spec-card-icon">💨</span>
+          <div class="spec-card-title">0-100 KM/H</div>
+          <div class="spec-card-value">2.4 <span class="highlight">sec</span></div>
+          <div class="spec-card-desc">Launch control assisted</div>
+        </div>
+        <div class="spec-card">
+          <span class="spec-card-icon">🏁</span>
+          <div class="spec-card-title">TOP SPEED</div>
+          <div class="spec-card-value">420 <span class="highlight">km/h</span></div>
+          <div class="spec-card-desc">Electronically limited</div>
+        </div>
+        <div class="spec-card">
+          <span class="spec-card-icon">⚙️</span>
+          <div class="spec-card-title">TRANSMISSION</div>
+          <div class="spec-card-value">7-SPD <span class="highlight">DSG</span></div>
+          <div class="spec-card-desc">Dual-clutch automatic</div>
+        </div>
+        <div class="spec-card">
+          <span class="spec-card-icon">🪶</span>
+          <div class="spec-card-title">WEIGHT</div>
+          <div class="spec-card-value">1,996 <span class="highlight">kg</span></div>
+          <div class="spec-card-desc">Carbon fiber monocoque</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ════════════════ FEATURES SECTION ════════════════ -->
+  <section class="section" id="featuresSection">
+    <div class="section-reveal">
+      <div class="section-label">CRAFTSMANSHIP</div>
+      <h2 class="section-title">Beyond Engineering</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">◈</div>
+          <div>
+            <div class="feature-title">Adaptive Aerodynamics</div>
+            <div class="feature-desc">Active rear spoiler with hydraulic adjustments automatically optimizes downforce and drag coefficient at every speed threshold.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">◉</div>
+          <div>
+            <div class="feature-title">Titanium Exhaust System</div>
+            <div class="feature-desc">3D-printed titanium exhaust tips with proprietary acoustic engineering deliver the signature Bugatti growl.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⬡</div>
+          <div>
+            <div class="feature-title">Carbon Fiber Monocoque</div>
+            <div class="feature-desc">Full carbon fiber body structure with T-shaped central tub for unparalleled rigidity-to-weight ratio.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">◇</div>
+          <div>
+            <div class="feature-title">Bespoke Interior</div>
+            <div class="feature-desc">Hand-stitched leather, milled aluminum controls, and the iconic Bugatti horseshoe grille motif throughout the cabin.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="footer section-reveal">
+    <div class="footer-logo">BUGAT<span>T</span>I</div>
+    <ul class="footer-links">
+      <li><a href="#specsSection">Specifications</a></li>
+      <li><a href="#featuresSection">Craftsmanship</a></li>
+      <li><a href="#inquire">Configure</a></li>
+      <li><a href="#inquire">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Bugatti Automobiles S.A.S. All rights reserved. This is a design concept showcase.</div>
+  </footer>
+
+  <!-- ════════════════ JAVASCRIPT ════════════════ -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ─── Config ─── */
+      const TOTAL_FRAMES = 114;
+      const IMAGE_PATH = './images/bugatti-sequence/';
+      const pad = (n) => String(n).padStart(3, '0');
+
+      /* ─── DOM refs ─── */
+      const canvas = document.getElementById('carCanvas');
+      const ctx = canvas.getContext('2d');
+      const loader = document.getElementById('loader');
+      const loaderBar = document.getElementById('loaderBar');
+      const loaderPercent = document.getElementById('loaderPercent');
+      const navbar = document.getElementById('navbar');
+      const scrollContainer = document.getElementById('scrollContainer');
+      const progressFill = document.getElementById('progressFill');
+      const scanTop = document.getElementById('scanTop');
+      const scanBottom = document.getElementById('scanBottom');
+      const phaseHero = document.getElementById('phaseHero');
+      const phaseDesign = document.getElementById('phaseDesign');
+      const phaseEngine = document.getElementById('phaseEngine');
+
+      /* ─── State ─── */
+      const frames = [];
+      let loadedCount = 0;
+      let currentFrame = 0;
+      let scrollProgress = 0;
+      let ticking = false;
+
+      /* ═══════════════════════════════════════════
+         FRAME PRELOADER
+      ═══════════════════════════════════════════ */
+      function preloadFrames() {
+        return new Promise((resolve) => {
+          for (let i = 1; i <= TOTAL_FRAMES; i++) {
+            const img = new Image();
+            img.src = `${IMAGE_PATH}frame-${pad(i)}.jpg`;
+            img.addEventListener('load', () => {
+              loadedCount++;
+              const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+              loaderBar.style.width = pct + '%';
+              loaderPercent.textContent = pct + '%';
+              if (loadedCount === TOTAL_FRAMES) resolve();
+            });
+            img.addEventListener('error', () => {
+              loadedCount++;
+              if (loadedCount === TOTAL_FRAMES) resolve();
+            });
+            frames.push(img);
+          }
+        });
+      }
+
+      /* ═══════════════════════════════════════════
+         CANVAS SETUP & DRAW
+      ═══════════════════════════════════════════ */
+      function sizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function drawFrame(index) {
+        const img = frames[index];
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+
+        const cw = canvas.width / (window.devicePixelRatio || 1);
+        const ch = canvas.height / (window.devicePixelRatio || 1);
+        const iw = img.naturalWidth;
+        const ih = img.naturalHeight;
+
+        // object-fit: contain
+        const scale = Math.min(cw / iw, ch / ih);
+        const dw = iw * scale;
+        const dh = ih * scale;
+        const dx = (cw - dw) / 2;
+        const dy = (ch - dh) / 2;
+
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, dx, dy, dw, dh);
+      }
+
+      /* ═══════════════════════════════════════════
+         SCROLL HANDLER
+      ═══════════════════════════════════════════ */
+      function getScrollProgress() {
+        const rect = scrollContainer.getBoundingClientRect();
+        const scrollable = scrollContainer.offsetHeight - window.innerHeight;
+        if (scrollable <= 0) return 0;
+        const scrolled = -rect.top;
+        return Math.max(0, Math.min(1, scrolled / scrollable));
+      }
+
+      function updateHUD(progress) {
+        // Progress bar
+        progressFill.style.height = (progress * 100) + '%';
+
+        // Scanlines
+        const showScan = progress > 0.02 && progress < 0.98;
+        scanTop.classList.toggle('visible', showScan);
+        scanBottom.classList.toggle('visible', showScan);
+
+        // Phases
+        if (progress < 0.30) {
+          phaseHero.classList.add('active');
+          phaseDesign.classList.remove('active');
+          phaseEngine.classList.remove('active');
+        } else if (progress < 0.63) {
+          phaseHero.classList.remove('active');
+          phaseDesign.classList.add('active');
+          phaseEngine.classList.remove('active');
+        } else {
+          phaseHero.classList.remove('active');
+          phaseDesign.classList.remove('active');
+          phaseEngine.classList.add('active');
+        }
+      }
+
+      function onScroll() {
+        scrollProgress = getScrollProgress();
+
+        // Navbar
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            const frameIndex = Math.min(
+              TOTAL_FRAMES - 1,
+              Math.floor(scrollProgress * (TOTAL_FRAMES - 1))
+            );
+
+            if (frameIndex !== currentFrame) {
+              currentFrame = frameIndex;
+              drawFrame(currentFrame);
+            }
+
+            updateHUD(scrollProgress);
+            ticking = false;
+          });
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+         INTERSECTION OBSERVER — Reveal Sections
+      ═══════════════════════════════════════════ */
+      function initRevealObserver() {
+        const reveals = document.querySelectorAll('.section-reveal');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        reveals.forEach((el) => observer.observe(el));
+      }
+
+      /* ═══════════════════════════════════════════
+         MAGNETIC HOVER EFFECT
+      ═══════════════════════════════════════════ */
+      function initMagnetic() {
+        const wraps = document.querySelectorAll('.magnetic-wrap');
+        wraps.forEach((wrap) => {
+          const child = wrap.firstElementChild;
+          wrap.addEventListener('mousemove', (e) => {
+            const rect = wrap.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            child.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+          });
+          wrap.addEventListener('mouseleave', () => {
+            child.style.transform = 'translate(0, 0)';
+            child.style.transition = 'transform 0.4s var(--ease-out)';
+            setTimeout(() => { child.style.transition = ''; }, 400);
+          });
+        });
+      }
+
+      /* ═══════════════════════════════════════════
+         INIT
+      ═══════════════════════════════════════════ */
+      async function init() {
+        sizeCanvas();
+        await preloadFrames();
+
+        // Hide loader
+        loader.classList.add('hidden');
+
+        // Draw first frame
+        drawFrame(0);
+        currentFrame = 0;
+
+        // Listeners
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', () => {
+          sizeCanvas();
+          drawFrame(currentFrame);
+        });
+
+        // Initial state
+        onScroll();
+
+        // Observers & effects
+        initRevealObserver();
+        initMagnetic();
+      }
+
+      // Wait for fonts + DOM
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
